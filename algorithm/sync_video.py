@@ -1,5 +1,6 @@
 import ffmpeg
 import os
+from scipy.io.wavfile import read, write
 
 # helpful link to figure out os paths: https://stackoverflow.com/questions/18114081/ffmpeg-cannot-detect-file-while-os-can
 print(os.getcwd())
@@ -9,6 +10,37 @@ main = ffmpeg.input(rel_root + '/algorithm/public/lastMoments.mov')
 logo = ffmpeg.input(rel_root + '/algorithm/public/teethareuspic.jpg')
 input2 = ffmpeg.input(rel_root + '/algorithm/public/test-input2.mov')
 input3 = ffmpeg.input(rel_root + '/algorithm/public/input3.mov')
+aud = input3.audio
+input3 = input3.video
+
+# AUDIO OPERATIONS
+def extract_audio(alist):
+    """
+    extracts audio from .audio ffmpeg streams into .WAV files
+    Inputs:
+        - alist: list of streams
+    Outputs:
+        - wav_alist: list of wav files
+    """
+    file_path = rel_root + "/algorithm/public/audio_extracts/"
+    wav_alist = []
+    a_tracker = 0
+    for a in alist:
+        name = file_path + str(a_tracker) + '.wav'
+        wav_alist.append(a.output(name, audio_bitrate="160k").run())
+    print('stuff in wav ', wav_alist[0])
+    return wav_alist
+
+def generate_mixed_audio(alist):
+    sf, data = read(alist[0])
+    print(data)
+    print(sf)
+
+extract_audio([aud])
+
+# VIDEO OPERATIONS (all files included assumed to exclude audio)
+def trim_vids(untrimmed_vlist):
+    pass
 
 def generate_mosaic(vlist):
     """
@@ -44,10 +76,10 @@ def compress_v(in_vid, num_r_c):
     }
     return ffmpeg.filter(in_vid, 'scale', width=res_dict[num_r_c][0], height=res_dict[num_r_c][1]) # allows x.0 for input w, h
 
-input22 = compress_v(input2, 2).split()
-input2main = compress_v(main, 2).split()
-input23 = compress_v(input3, 2).split()
-generate_mosaic([[input22[0], input22[1]], [input23[0], input23[1]]]).output("test_again_3.9.mp4").run()
+# input22 = compress_v(input2, 2).split()
+# input2main = compress_v(main, 2).split()
+# input23 = compress_v(input3, 2).split()
+# generate_mosaic([[input22[0], input22[1]], [input23[0], input23[1]]]).output(aud, "test_again_3.10.mp4").run()
 
 
 """
@@ -91,7 +123,14 @@ SUCCESSES
 - manual xstack works
 - successfully scaling
 - learned how to control bitrate
+- extract audio and video separately
 
+# 12/28
+SUCCESSES
+- converted audio ffmpeg streams to .WAV files
+
+QUESTIONS
+- how to store the audio ffmpeg streams
 
 THINGS TO CONSIDER FOR CONFIGURABILITY
 - dimensions of videos
