@@ -7,41 +7,20 @@ import math
 
 """
 FINAL VIDEO DESCRIPTION
-- audio: 4410 sr
-- video: .mp4, fr: 25 fps
+- audio: 4410 SR
+- video: .mp4, FR: 25 FPS
 - codec: h.264
 """
-
-REL_ROOT = os.getcwd() # gets current working directory (ludwig-2.0 apparently)
-V_OUTPUT_PATH = REL_ROOT + '/algorithm/public/video_extracts/'
-A_OUTPUT_PATH = REL_ROOT + '/algorithm/public/audio_extracts/'
-A_TRIMMED_PATH = REL_ROOT + '/algorithm/public/audio_trimmed/'
-A_MERGED_PATH = REL_ROOT + '/algorithm/public/audio_merged/'
-
-# INPUTS
-bg = ffmpeg.input(REL_ROOT + '/algorithm/public/REAL-1920x1080.jpg')
-main = ffmpeg.input(REL_ROOT + '/algorithm/public/lastMoments.mov')
-logo = ffmpeg.input(REL_ROOT + '/algorithm/public/teethareuspic.jpg')
-input2 = ffmpeg.input(REL_ROOT + '/algorithm/public/test-input2.mov')
-input3 = ffmpeg.input(REL_ROOT + '/algorithm/public/input3.mov')
-aud = input3.audio
-input3 = input3.video
-
-in1 = ffmpeg.input(REL_ROOT + '/algorithm/public/1.mov')
-in2 = ffmpeg.input(REL_ROOT + '/algorithm/public/2.mov')
-in3 = ffmpeg.input(REL_ROOT + '/algorithm/public/3.mov')
-in4 = ffmpeg.input(REL_ROOT + '/algorithm/public/4.mov')
-
 
 def editor(folder_path, work_num, output_file_name, output_file_type):
     """
     Handles all functions.
-    Input:
+    Inputs:
         - folder_path: path to folder housing all video files ordered in order to be shown in video.
         - work_num: main number address for client
         - output_file_name: name of final video file
         - output_file_type: type of video file for final video
-    Output:
+    Outputs:
         - path to final video
     """
     ffmpeg_v_list = []
@@ -80,6 +59,7 @@ def generate_dir(path, name):
     os.mkdir(dir_path)
     dir_path = dir_path + '/'
     return dir_path
+
 
 # AUDIO OPERATIONS
 def audio_handler(alist, workspace):
@@ -220,7 +200,6 @@ def graph_audio(data):
     plt.show()
 
 
-
 # VIDEO OPERATIONS
 def trim_vids(vlist, cut_off_time):
     """
@@ -337,69 +316,3 @@ def generate_mosaic(vlist):
 
 
 editor(os.getcwd() + '/algorithm/assets/me_singing', "DEMO PROJECT", "acapella", ".mp4")
-
-"""
-NOTES
-- h/v/xstack HELLA important: https://stackoverflow.com/questions/11552565/vertically-or-horizontally-stack-mosaic-several-videos-using-ffmpeg
-
-- ffmpeg.trim i think i will need this later on in the future
-# left_half = (
-#     ffmpeg
-#     .crop(main)
-# )
-
-- use .SPLIT() to create split upstream, call children by x[0], x[1]...
-
-- use .compile() for any more complicated operations
-
-
-# THIS IS POSSIBLE
-# in0 = ffmpeg.input('input0').filter('crop', ...)
-# in1 = ffmpeg.input('input1').filter('crop', ...)
-# out = ffmpeg.filter([in0, in1], 'hstack').output('output')
-
-- WORKING WITH VID AND AUDIO TOGETHER
-- https://github.com/kkroening/ffmpeg-python/issues/208
-
-
-- MAKING BLANK SPOTS IN MOSAIC BLACK
-- https://stackoverflow.com/questions/63429206/ffmpeg-xstack-mutiple-inputs-for-mosaic-video-output-extra-output-blank-scre
-"""
-
-
-"""
-LOG 
-# 12/23 it works! the hstack 4-way was successful, now gotta see if i can compress the videos
-# todo:
-#   - compression works with scaling!
-#   - xstack
-
-# 12/27
-SUCCESSES
-- manual xstack works
-- successfully scaling
-- learned how to control bitrate
-- extract audio and video separately
-
-# 12/28
-SUCCESSES
-- converted audio ffmpeg streams to .WAV files
-
-QUESTIONS
-- how to store the audio ffmpeg streams
-
-# 12/29
-SUCCESSES
-- GOT A BOOTLEG VIDEO FINISHED
-
-QUESTIONS/GOALS FOR TMR
-- compress_v take in a list of video files rather than 1
-- trimming video is not exact, maybe fix decimal (find framerate of vid and go by frames)
-
-# 12/30
-- AUDIO / VIDEO IS SYNCHRONIZED PERFECTLY
-THINGS TO CONSIDER FOR CONFIGURABILITY
-- dimensions of videos
-- frame rate of videos
-- video file types
-"""
