@@ -22,39 +22,53 @@
                                 @change="onFilePicked">
 
                         <base-button type="primary" @click="onPickFile" class="my-4">Upload Video</base-button>
-                        <!-- <video :src="videoURL64" style="max-width=150px"></video> -->
-                        <!-- <base-input alternative
+                        <base-input alternative
                                     class="mb-3"
                                     placeholder="Project Name"
                                     addon-left-icon="ni ni-hat-3"
-                                    v-model="projectName">
+                                    v-model="project.projectName">
                         </base-input>
                         <base-input alternative
                                     class="mb-3"
                                     placeholder="Piece Title"
                                     addon-left-icon="ni ni-email-83"
-                                    v-model="pieceTitle">
+                                    v-model="project.pieceTitle">
                         </base-input>
                         <base-input alternative
                                     class="mb-3"
                                     placeholder="Composer"
                                     addon-left-icon="ni ni-lock-circle-open"
-                                    v-model="composer">
+                                    v-model="project.composer">
                         </base-input>
                         <base-input alternative
                                     class="mb-3"
                                     placeholder="Ensemble Name"
                                     addon-left-icon="ni ni-lock-circle-open"
-                                    v-model="ensemble">
-                        </base-input> -->
+                                    v-model="project.ensemble">
+                        </base-input>
                         <div class="text-center">
-                            <base-button type="primary" v-on:click="pressed" class="my-4">Create account</base-button>
+                            <base-button type="primary" v-on:click="pressed" class="my-4">Generate Virtual Ensemble</base-button>
                         </div>
                     </form>
                     <card>
-                        <div style="width: 80px" v-for="video in project.videos" v-bind:key="video.title">
-                            <img v-bind:src="video.url64" alt="video thumbnail">
-                            <span>{{video.title}}</span>
+                        <div class="mx-3 p-0" v-for="video in project.videos" v-bind:key="video.title">
+                            <card class="p-2 border-1">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <video style="width: 25px" v-bind:src="video.url64" alt="video thumbnail"></video>
+                                    </div>
+                                    <div class="col-9">
+                                    <h6>{{video.title}}</h6>
+                                    </div>
+                                    <div class="col-1">
+                                        <base-button    type="primary" 
+                                                        v-on:click="deleteVideo(video)" 
+                                                        class="m-0 py-0 px-1">
+                                            <i class="p-0 ni ni-fat-remove"></i>
+                                        </base-button>
+                                    </div>
+                                </div>
+                            </card>
                         </div>
                     </card>
                 </template>
@@ -114,10 +128,10 @@ export default {
         return {
             visible: true,
             project: {
-                // projectName: '',
-                // pieceTitle: '',
-                // composer: '',
-                // ensemble: '',
+                projectName: '',
+                pieceTitle: '',
+                composer: '',
+                ensemble: '',
                 videos: []
             }
         }
@@ -125,6 +139,14 @@ export default {
     methods: {
         onPickFile() {
             this.$refs.fileInput.click()
+        },
+        deleteVideo(video) {
+
+            const index = this.project.videos.indexOf(video);
+            if (index > -1) {
+                this.project.videos.splice(index, 1);
+            }
+            console.log(this.project.videos)
         },
         onFilePicked(event) {
             
@@ -139,7 +161,8 @@ export default {
             const video = {
                     title: videoName,
                     url64: '',
-                    raw: null
+                    raw: null,
+                    link: ''
             }
 
             const fileReader = new FileReader()
@@ -160,20 +183,34 @@ export default {
                 }
                 const userID = firebase.auth().currentUser.uid
                 const storageRef = firebase.storage().ref()
+                const projectPath = 'user/' + userID + '/' + this.project.projectName
 
                 for (let i = 0; i < this.project.videos.length; i++) {
-                    const filePath = 'user/' + userID + '/uploads/' + this.project.videos[i].title
-                    const videoRef = storageRef.child(filePath)
+                    const videoPath = projectPath + '/uploads/' + this.project.videos[i].title
+                    const videoRef = storageRef.child(videoPath)
                     let uploadTask = await videoRef.put(this.project.videos[i].raw, metaData)
+
+                    // get video link
+                    videoRef.getDownloadURL()
+                        .then((url) => {
+                            this.project.videos[i].link=url
+                        }).catch((error) => {
+                            console.log(error)
+                        })
+                    
+                    // Don't need this anymore
+                    delete this.project.videos[i].raw
                 }
+
+                // upload JSON with Project Info
+                const jsonString = JSON.stringify(this.project)
+                const blob = new Blob([jsonString], {type: "application/json"})
+
+                const jsonPath = projectPath + "/projectInfo.json"
+                storageRef.child(jsonPath).put(blob).then(function(snapshot) {
+                });
+                console.log(this.project)
     
-                // // get video link
-                // videoRef.getDownloadURL()
-                //     .then((url) => {
-                //         video.url=url
-                //     }).catch((error) => {
-                //         console.log(error)
-                //     })
             }
             catch (err) {
                 console.log(err)
