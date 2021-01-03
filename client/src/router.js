@@ -3,6 +3,7 @@ import Router from "vue-router";
 
 import AppHeader from "./layout/AppHeader";
 import AppFooter from "./layout/AppFooter";
+import SideNav from "./layout/SideNav";
 
 import Components from "./views/Components.vue";
 import Landing from "./views/Landing.vue";
@@ -10,6 +11,7 @@ import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import Dashboard from "./views/Dashboard.vue";
+import Create from "./views/Create.vue";
 
 import firebase from "firebase/app"
 import "firebase/auth"
@@ -35,7 +37,6 @@ const router = new Router({
       path: "/dashboard",
       name: "dashboard",
       components: {
-        header: AppHeader,
         default: Dashboard,
         footer: AppFooter
       },
@@ -47,6 +48,14 @@ const router = new Router({
       components: {
         header: AppHeader,
         default: Landing,
+        footer: AppFooter
+      }
+    },
+    {
+      path: "/create",
+      name: "create",
+      components: {
+        default: Create,
         footer: AppFooter
       }
     },
