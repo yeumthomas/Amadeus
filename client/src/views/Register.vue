@@ -10,8 +10,6 @@
             <span></span>
             <span></span>
         </div>
-
-
         <div v-if="error" class="error">{{error.message}}</div>
 
 

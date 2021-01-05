@@ -3,7 +3,7 @@ import Router from "vue-router";
 
 import AppHeader from "./layout/AppHeader";
 import AppFooter from "./layout/AppFooter";
-import SideNav from "./layout/SideNav";
+import DashboardHeader from "./layout/DashboardHeader";
 
 import Components from "./views/Components.vue";
 import Landing from "./views/Landing.vue";
@@ -15,6 +15,7 @@ import Create from "./views/Create.vue";
 
 import firebase from "firebase/app"
 import "firebase/auth"
+
 
 Vue.use(Router);
 
@@ -37,6 +38,7 @@ const router = new Router({
       path: "/dashboard",
       name: "dashboard",
       components: {
+        header: DashboardHeader,
         default: Dashboard,
         footer: AppFooter
       },
@@ -55,6 +57,7 @@ const router = new Router({
       path: "/create",
       name: "create",
       components: {
+        header: DashboardHeader,
         default: Create,
         footer: AppFooter
       }

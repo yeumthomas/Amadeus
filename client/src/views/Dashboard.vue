@@ -4,7 +4,6 @@
         <section class="section-hero section-shaped my-0">
             <div class="shape shape-style-1 shape-primary">
             </div>
-            <SideNav/>
         </section>
         <section class="section section-lg">
             <div class="container">
