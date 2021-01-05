@@ -60,7 +60,7 @@
                 <li class="nav-item d-none d-lg-block ml-lg-4">
                     <base-button @click="signOut">
                         <span class="btn-inner--icon">
-                            <i class="fa fa-cloud-download mr-2"></i>
+                            <i class="ni ni-circle-08 mr-2"></i>
                         </span>
                         <span v-if="loggedIn" class="nav-link-inner--text">Log Out</span>
                         <span v-else class="nav-link-inner--text">Log In</span>
