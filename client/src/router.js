@@ -12,6 +12,7 @@ import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import Dashboard from "./views/Dashboard.vue";
 import Create from "./views/Create.vue";
+import Loading from "./views/Loading.vue";
 
 import firebase from "firebase/app"
 import "firebase/auth"
@@ -59,6 +60,15 @@ const router = new Router({
       components: {
         header: DashboardHeader,
         default: Create,
+        footer: AppFooter
+      }
+    },
+    {
+      path: "/loading",
+      name: "loading",
+      components: {
+        header: DashboardHeader,
+        default: Loading,
         footer: AppFooter
       }
     },

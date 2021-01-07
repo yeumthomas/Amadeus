@@ -3,7 +3,6 @@ import App from "./App.vue";
 import router from "./router";
 import Argon from "./plugins/argon-kit";
 import './registerServiceWorker';
-import {BSidebar} from "bootstrap-vue";
 
 import axios from 'axios';
 import firebase from 'firebase';
@@ -24,11 +23,9 @@ firebase.analytics();
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false;
 Vue.use(Argon);
-Vue.component('b-sidebar', BSidebar)
 let app;
 
 firebase.auth().onAuthStateChanged(user => {
-  console.log(user)
   if(!app){
     new Vue({
       router,

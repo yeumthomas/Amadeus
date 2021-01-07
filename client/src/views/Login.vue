@@ -76,8 +76,7 @@ export default {
     methods: {
         async signIn() {
             try {
-                const val = firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-                console.log(val)
+                const val = await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 this.$router.replace({name: 'dashboard'})
             }
             catch (err) {

@@ -18,3 +18,6 @@ export default {
   }
 };
 </script>
+<style lang="sass">
+  @font-face {font-family: Helvetica Neue; src: url('./assets/scss/HelveticaNeue.ttf'); font-weight: heavy;}
+</style>
