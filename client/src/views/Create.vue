@@ -170,7 +170,7 @@ export default {
                 // add video object to list of videos
                 video.raw = files[i]
                 this.project.videos.push(video)
-                console.log("Uploaded: " + video.title)
+                // console.log("Uploaded: " + video.title)
             }
         },
         async pressed() {
@@ -195,9 +195,9 @@ export default {
                         await videoRef.getDownloadURL()
                             .then((url) => {
                                 this.project.videos[i].link = url
-                                console.log(url)
+                                // console.log(url)
                             }).catch((error) => {
-                                console.log(error)
+                                // console.log(error)
                             })
 
                         // Don't need raw anymore
@@ -219,7 +219,7 @@ export default {
                     db.set(this.project)
                 }
                 catch (err) {
-                    console.log(err)
+                    // console.log(err)
                 }
             }
             else {

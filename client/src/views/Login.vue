@@ -80,7 +80,7 @@ export default {
                 this.$router.replace({name: 'dashboard'})
             }
             catch (err) {
-                console.log(err)
+                // console.log(err)
             }
         }
     }

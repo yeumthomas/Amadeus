@@ -69,11 +69,11 @@ export default {
         async signOut() {
             try {
                 const data = await firebase.auth().signOut();
-                console.log(data);
+                // console.log(data);
                 this.$router.replace({name: 'login'})
             }
             catch (err) {
-                console.log(err)
+                // console.log(err)
             }
         }
     },
