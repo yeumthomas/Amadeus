@@ -14,6 +14,7 @@ import Dashboard from "./views/Dashboard.vue";
 import Create from "./views/Create.vue";
 import Loading from "./views/Loading.vue";
 import NotFound from "./views/NotFound.vue";
+import Reset from "./views/ResetPass.vue";
 
 import firebase from "firebase/app"
 import "firebase/auth"
@@ -87,6 +88,14 @@ const router = new Router({
       components: {
         header: AppHeader,
         default: Login,
+      }
+    },
+    {
+      path: "/reset",
+      name: "reset",
+      components: {
+        header: AppHeader,
+        default: Reset
       }
     },
     {

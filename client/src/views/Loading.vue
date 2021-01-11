@@ -13,7 +13,7 @@
                             <span class="display-4 text-primary" style="font-family: Helvetica Neue">  Successfully Submitted Recordings</span>
                             <hr/>
                             <h6 class="text-default" style="font-family: Helvetica Neue">Your Virtual Ensemble will be Complete in 24-48 Hours!</h6>
-                            <p class="text-default pt-2">Please keep a eye out for an email (used to sign into Amadeus) that will notify you that the 
+                            <p class="text-default pt-2">Please keep a eye out for an email that will notify you that the 
                                 virtual ensemble video is complete!</p>
                             <div class="row justify-items-right">
                                 <div class="col-4">
