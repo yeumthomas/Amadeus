@@ -13,7 +13,7 @@
         <div v-if="error" class="error">{{error.message}}</div>
 
 
-        <div class="container pt-lg-md">
+        <div class="container pt-lg-md " style="margin-bottom: 10rem !important;">
             <div class="row justify-content-center">
                 <div class="col-lg-5">
                     <card type="secondary" shadow
@@ -27,12 +27,6 @@
                             <form @submit.prevent="pressed" role="form">
                                 <base-input alternative
                                             class="mb-3"
-                                            placeholder="Name"
-                                            addon-left-icon="ni ni-hat-3"
-                                            v-model="name">
-                                </base-input>
-                                <base-input alternative
-                                            class="mb-3"
                                             placeholder="Email"
                                             addon-left-icon="ni ni-email-83"
                                             v-model="email">
@@ -43,16 +37,14 @@
                                             addon-left-icon="ni ni-lock-circle-open"
                                             v-model="password">
                                 </base-input>
-                                <div class="text-muted font-italic">
-                                    <small>password strength:
-                                        <span class="text-success font-weight-700">strong</span>
-                                    </small>
+                                <base-input alternative
+                                            placeholder="Access Code"
+                                            addon-left-icon="fa fa-pencil"
+                                            v-model="code">
+                                </base-input>
+                                <div class="alert alert-danger m-0 p-2 text-center" role="alert" v-if="alert">
+                                    Incorrect Access Code
                                 </div>
-                                <base-checkbox>
-                                    <span>I agree with the
-                                        <a href="#">Privacy Policy</a>
-                                    </span>
-                                </base-checkbox>
                                 <div class="text-center">
                                     <base-button type="primary" v-on:click="pressed" class="my-4">Create account</base-button>
                                 </div>
@@ -70,21 +62,27 @@ import "firebase/auth"
 export default {
     data () {
         return {
-            name:"",
+            code: "",
             email: "",
             password: "",
-            error: ""
+            error: "",
+            alert: false
         }
     },
     methods: {
         async pressed() {
             try {
-                const user = firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-                console.log(user)
-                this.$router.replace({name: "dashboard"});
+                if (this.code == "beethoven") {
+                    const user = await firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+                    this.$router.replace({name: "dashboard"});
+                }
+                else {
+                    this.alert = true
+                }
             }
             catch (err) {
-                // console.log(err)
+                console.log(err)
+                this.alert = true
             }
         }
     }

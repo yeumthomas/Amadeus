@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer bg-default">
+    <footer class="footer bg-default my-0">
         <div class="container">
             <div class="row align-items-center justify-content-md-between">
                 <div class="col-md-6">

@@ -18,18 +18,16 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_APP_ID,
   measurementId: process.env.VUE_APP_MEASUREMENT_ID
 };
-console.log("BERFORE")
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 // firebase.analytics(); does not work for node
-console.log("AFTER")
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false;
 Vue.use(Argon);
 let app;
 
-console.log(firebase.app().options)
 firebase.auth().onAuthStateChanged(user => {
   if(!app){
     new Vue({
