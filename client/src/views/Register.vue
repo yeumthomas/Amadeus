@@ -51,6 +51,14 @@
                             </form>
                         </template>
                     </card>
+                    <div class="row mt-2">
+                        <div class="col-6"></div>
+                        <div class="col-6 text-right">
+                            <a href="/login" class="text-white text-light">
+                                <small>Already have an account?</small>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
