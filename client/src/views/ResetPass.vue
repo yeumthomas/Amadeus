@@ -31,10 +31,10 @@
                                             @keyup.enter.native="sendEmail()">
                                 </base-input>
                                 <div class="alert alert-success m-0 p-2 text-center" role="success" v-if="success">
-                                    Sent password reset email!
+                                    Sent reset email!
                                 </div>
                                 <div class="alert alert-danger m-0 p-2 text-center" role="fail" v-if="fail">
-                                    Account does not exist with account.
+                                    Account does not exist with this email.
                                 </div>
                                 <div class="text-center" v-if="show">
                                     <base-button type="primary" v-on:click='sendEmail()' class="my-4">Send Email</base-button>
