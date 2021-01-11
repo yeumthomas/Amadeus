@@ -5,7 +5,9 @@ import Argon from "./plugins/argon-kit";
 import './registerServiceWorker';
 
 import axios from 'axios';
-import firebase from 'firebase';
+// import firebase from 'firebase';
+import firebase from 'firebase/app';
+// import 'firebase/<PACKAGE>';
 
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_API_KEY,
@@ -16,10 +18,11 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_APP_ID,
   measurementId: process.env.VUE_APP_MEASUREMENT_ID
 };
+
 console.log('finished configging')
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-firebase.analytics();
+// firebase.analytics(); does not work for node
 
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false;

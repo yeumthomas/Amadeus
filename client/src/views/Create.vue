@@ -112,6 +112,8 @@
 
 <script>
 import firebase from "firebase/app";
+import "firebase/database";
+import "firebase/storage"
 
 export default {
     name: "home",
