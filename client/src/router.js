@@ -13,6 +13,7 @@ import Profile from "./views/Profile.vue";
 import Dashboard from "./views/Dashboard.vue";
 import Create from "./views/Create.vue";
 import Loading from "./views/Loading.vue";
+import NotFound from "./views/NotFound.vue";
 
 import firebase from "firebase/app"
 import "firebase/auth"
@@ -26,6 +27,15 @@ const router = new Router({
   history: true,
   historyApiFallback: true,
   routes: [
+    {
+      path: '*',
+      name: 'notfound',
+      components: {
+        header: AppHeader,
+        default: NotFound,
+        footer: AppFooter
+      }
+    },
     {
       path: "/",
       name: "components",
