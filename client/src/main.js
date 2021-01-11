@@ -7,7 +7,7 @@ import './registerServiceWorker';
 import axios from 'axios';
 // import firebase from 'firebase';
 import firebase from 'firebase/app';
-// import 'firebase/<PACKAGE>';
+import 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_API_KEY,
@@ -21,6 +21,7 @@ const firebaseConfig = {
 console.log("BERFORE")
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
 // firebase.analytics(); does not work for node
 console.log("AFTER")
 Vue.prototype.$axios = axios
@@ -28,6 +29,7 @@ Vue.config.productionTip = false;
 Vue.use(Argon);
 let app;
 
+console.log(firebase.app().options)
 firebase.auth().onAuthStateChanged(user => {
   if(!app){
     new Vue({
