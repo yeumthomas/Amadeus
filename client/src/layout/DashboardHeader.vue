@@ -25,7 +25,7 @@
                                 class="mb-3 mb-sm-0 btn-neutral"
                                 type="default"
                                 icon="fa fa-plus">
-                    Create Project
+                    New Project
                 </base-button>
             </div>
             <ul class="navbar-nav align-items-lg-center ml-lg-auto">

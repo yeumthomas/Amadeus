@@ -184,9 +184,11 @@ export default {
                     const metaData = {
                         contentType: '.mp4'
                     }
-                    const userID = firebase.auth().currentUser.uid
+                    const userEmail = firebase.auth().currentUser.email
+                    const fixedUserEmail = userEmail.split('.').join(','); // also replaces all dots
+
                     const storageRef = firebase.storage().ref()
-                    const projectPath = 'user/' + userID + '/' + this.project.projectName
+                    const projectPath = 'user/' + fixedUserEmail + '/' + this.project.projectName
 
                     for (let i = 0; i < this.project.videos.length; i++) {
                         const videoPath = projectPath + '/uploads/' + this.project.videos[i].title
@@ -221,7 +223,7 @@ export default {
                     db.set(this.project)
                 }
                 catch (err) {
-                    // console.log(err)
+                    console.log(err)
                 }
             }
             else {
