@@ -2,13 +2,13 @@
     <header class="header-global">
         <base-nav class="navbar-main" transparent type="" effect="light" expand>
             <router-link slot="brand" class="navbar-brand mr-lg-5" to="/">
-                <img src="img/brand/white.png" alt="logo">
+                <img src="../../public/logo-white.png" alt="logo">
             </router-link>
 
             <div class="row" slot="content-header" slot-scope="{closeMenu}">
                 <div class="col-6 collapse-brand">
                     <a href="https://demos.creative-tim.com/vue-argon-design-system/documentation/">
-                        <img src="img/brand/blue.png">
+                        <img src="../../public/logo-blue.png">
                     </a>
                 </div>
                 <div class="col-6 collapse-close">
@@ -21,8 +21,8 @@
                         <span class="btn-inner--icon">
                             <i class="ni ni-circle-08 mr-2"></i>
                         </span>
-                        <span v-if="loggedIn" class="nav-link-inner--text">Log Out</span>
-                        <span v-else class="nav-link-inner--text">Log In</span>
+                        <span v-if="loggedIn" class="nav-link-inner--text">Sign Out</span>
+                        <span v-else class="nav-link-inner--text">Sign In</span>
                     </base-button>
                 </li>
             </ul>

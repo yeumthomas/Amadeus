@@ -39,7 +39,7 @@
                                     Incorrect Email or Password
                                 </div>
                                 <div class="text-center">
-                                    <base-button type="primary" v-on:click=signIn() class="my-4">Sign In</base-button>
+                                    <base-button type="primary" v-on:click=signIn() class="my-4">Sign in</base-button>
                                 </div>
                                 <div class="error" v-if="error">{{error.message}}</div>
                             </form>

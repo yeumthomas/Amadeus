@@ -141,7 +141,7 @@ export default {
             if (index > -1) {
                 this.project.videos.splice(index, 1);
             }
-            console.log(this.project.videos)
+            // console.log(this.project.videos)
         },
         onFilesPicked(event) {
 
@@ -223,7 +223,7 @@ export default {
                     db.set(this.project)
                 }
                 catch (err) {
-                    console.log(err)
+                    // console.log(err)
                 }
             }
             else {
