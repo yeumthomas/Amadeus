@@ -1,16 +1,16 @@
 <template>
     <header class="header-global fixed-top">
         <base-nav class="bg-default fixed-top" transparent type="" effect="light" expand>
-            <router-link slot="brand" class="navbar-brand mr-lg-5" to="/">
+            <router-link slot="brand" class="navbar-brand mr-lg-5" to="/dashboard">
                 <img src="../../public/logo-white.png" alt="logo">
             </router-link>
 
             <!-- For Mobile View -->
             <div class="row" slot="content-header" slot-scope="{closeMenu}">
                 <div class="col-6 collapse-brand">
-                    <!-- <a href="https://www.google.com"> FIX THIS TO ROUTE TO LANDING -->
+                    <a href="/dashboard">
                         <img src="../../public/logo-blue.png">
-                    <!-- </a> -->
+                    </a>
                 <div class="btn-wrapper mt-2 mb-2">
                 </div>
                 </div>
