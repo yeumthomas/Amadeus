@@ -97,7 +97,8 @@ const router = new Router({
       name: "reset",
       components: {
         header: AppHeader,
-        default: Reset
+        default: Reset,
+        footer: AppFooter
       }
     },
     {
@@ -106,6 +107,7 @@ const router = new Router({
       components: {
         header: AppHeader,
         default: Register,
+        footer: AppFooter
       }
     },
     {
