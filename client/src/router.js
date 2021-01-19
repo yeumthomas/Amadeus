@@ -80,6 +80,7 @@ const router = new Router({
       components: {
         header: AppHeader,
         default: Login,
+        footer: AppFooter
       }
     },
     {
@@ -88,6 +89,7 @@ const router = new Router({
       components: {
         header: AppHeader,
         default: Login,
+        footer: AppFooter
       }
     },
     {
