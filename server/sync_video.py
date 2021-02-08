@@ -23,17 +23,36 @@ def editor(folder_path, work_num, output_file_name, output_file_type):
     Outputs:
         - path to final video
     """
+    # # Each of these lists correspond with each other.
+    # ffmpeg_v_list = []
+    # filename_list = []
+    # for file in os.scandir(folder_path):
+    #     # Doesn't analyze those pesky .DS_Store files
+    #     path = file.path
+    #     if not ('.DS_Store') in path:
+    #         ffmpeg_v_list.append(ffmpeg.input(file.path))
+    #         path = path[path.rindex('/')+1:] # Isolates file name and extension
+    #         path = path[:path.index('.')] # Removes extension
+    #         filename_list.append(path)
+
     # Each of these lists correspond with each other.
     ffmpeg_v_list = []
     filename_list = []
-    for file in os.scandir(folder_path):
+    print(os.listdir(folder_path))
+    print(os.scandir(folder_path))
+    base_folder = os.listdir(folder_path)
+    base_folder.sort()
+
+    for file_name in base_folder:
         # Doesn't analyze those pesky .DS_Store files
-        path = file.path
-        if not ('.DS_Store') in path:
-            ffmpeg_v_list.append(ffmpeg.input(file.path))
+        path = folder_path + '/' + file_name
+        if file_name != '.DS_Store':
+            ffmpeg_v_list.append(ffmpeg.input(path))
             path = path[path.rindex('/')+1:] # Isolates file name and extension
             path = path[:path.index('.')] # Removes extension
             filename_list.append(path)
+            print(ffmpeg_v_list)
+            print(filename_list)
 
     
     # GENERATE FOLDER FOR WORKSPACE
@@ -259,11 +278,13 @@ def generate_mosaic(vlist):
                 for dummy in range(remainder):
                     mosaic_form[rev_ind] = mosaic_form[rev_ind] + 1
                     rev_ind -= 1
-                    print(mosaic_form)
             
             check = check_dims(len(mosaic_form), mosaic_form[-1])
             lower_square += 1
 
+        mosaic_form.reverse() if mosaic_form[0] < mosaic_form[-1] else None # Now the bottom row will contain the remainder videos (ex: 2 videos in a 3x3 mosaic).
+        
+        mosaic_form = [5, 5, 5, 5, 4]
         return mosaic_form
 
     def check_dims(r, c):
@@ -292,7 +313,65 @@ def generate_mosaic(vlist):
             - new video artifact with compression added to workflow
         """
         w, h = 1920, 1080
-        return ffmpeg.filter(video, 'scale', width=w/cols, height=h/rows)
+        # If video is not 1920 X 1080, fix it up.
+        
+        # Compress video while maintaining 9:16 ratio.
+        perfect_h = (h / rows) - 10
+        perfect_w = (w / rows) - 10
+        
+        scaled_h = (h / rows) - 10
+        scaled_w = (w / cols) - 10
+
+        padding_h = 0
+        padding_w = 0
+
+        print("PERFECT_H: ", perfect_h)
+        print("PERFECT_W: ", perfect_w)
+        print("SCALED_H: ", scaled_h)
+        print("SCALED_W: ", scaled_w)
+
+        # If the video is too horizontally compressed.
+        if perfect_w > scaled_w:
+            scaled_perfect_h = round((perfect_h * scaled_w) / perfect_w) # this is proportion of 9/16 = h/w.
+            padding_h = scaled_h - scaled_perfect_h
+            print("SCALED_PERFECT_H: ", scaled_perfect_h)
+
+            compressed_vid = ffmpeg.filter(video, 'scale', width=scaled_w, height=scaled_perfect_h)
+
+            bordered_vid = ffmpeg.filter(compressed_vid, 'pad', w=scaled_w + 10, 
+                    h=scaled_perfect_h + 10,
+                    x=5,
+                    y=5,
+                    color='black')
+            # compressed_vid = ffmpeg.filter(compressed_vid, 'pad', w=scaled_w, 
+            #     h=scaled_h,
+            #     x=0,
+            #     y=padding_h / 2,
+            #     color='black')
+
+        # If the video is too horizontally stretched.
+        if perfect_w < scaled_w:
+            padding_w = scaled_w - perfect_w
+            scaled_perfect_w = perfect_w
+
+            compressed_vid = ffmpeg.filter(video, 'scale', width=scaled_perfect_w, height=scaled_h)
+            bordered_vid = ffmpeg.filter(compressed_vid, 'pad', w=scaled_perfect_w + 10, 
+                    h=scaled_h + 10,
+                    x=5,
+                    y=5,
+                    color='black')
+        else:
+            compressed_vid = ffmpeg.filter(video, 'scale', width=scaled_w, height=scaled_h)
+
+            # Give all videos a 5-pixel border
+            bordered_vid = ffmpeg.filter(compressed_vid, 'pad', w=scaled_w + 10, 
+                    h=scaled_h + 10,
+                    x=5,
+                    y=5,
+                    color='black')
+        
+
+        return bordered_vid, padding_w, padding_h
 
     mosaic_form = propose_mosaic(vlist)
 
@@ -300,7 +379,11 @@ def generate_mosaic(vlist):
     total_rows = len(mosaic_form)
     mosaic_matrix = [[] for dummy in range(total_rows)]
     curr_vid = 0
+    padding_on_each_row = []
+    padding_on_all_cols = 0
+
     for row, total_cols in enumerate(mosaic_form, start=0):
+        padding_on_curr_row = 0
         for v_index in range(total_cols):
             print("")
             print("row: ", row)
@@ -310,16 +393,55 @@ def generate_mosaic(vlist):
             print("total_cols: ", total_cols)
             print("")
 
-            mosaic_matrix[row].append(compress_v(vlist[curr_vid], total_rows, total_cols))
+            compressed, padding_w, padding_h = compress_v(vlist[curr_vid], total_rows, total_cols)
+            padding_on_curr_row += padding_w 
+            mosaic_matrix[row].append(compressed)
             curr_vid += 1
-    
+
+        padding_on_all_cols += padding_h 
+        padding_on_each_row.append(padding_on_curr_row)
+    print(padding_on_each_row)
+    print(padding_on_all_cols)
     print("MOSAIC_MATRIX: ", mosaic_matrix)
     # Prepare ffmpeg xstack.
     hstack_lst = []
-    for row in mosaic_matrix:
-        hstack_lst.append(ffmpeg.filter(row, 'hstack', len(row)))
+
+    # Add videos on each row to list of hstacks.
+    for ind, row in enumerate(mosaic_matrix):
+
+        row_of_videos = ffmpeg.filter(row, 'hstack', len(row))
+        if padding_on_each_row[ind] != 0:
+            row_of_videos = ffmpeg.filter(row_of_videos, 'pad', w=1920, 
+                    h=1080 / total_rows,
+                    x=padding_on_each_row[ind] / 2,
+                    y=0,
+                    color='black')
+    
+        # Add padding to top of video if first row.
+        if ind == 0:
+            row_of_videos = ffmpeg.filter(row_of_videos, 'pad', w=1920, 
+                    h=padding_on_all_cols + 1080 / total_rows,
+                    x=1920,
+                    y=padding_on_all_cols,
+                    color='black')
+
+        # Add padding to bot of video if last row.
+        if ind == len(mosaic_matrix) - 1:
+            row_of_videos = ffmpeg.filter(row_of_videos, 'pad', w=1920, 
+                    h=padding_on_all_cols + 1080 / total_rows,
+                    x=1920,
+                    y=0,
+                    color='black')
+
+        hstack_lst.append(row_of_videos)
+
     return ffmpeg.filter(hstack_lst, 'vstack', len(hstack_lst))
  
 
-editor(os.getcwd() + '/assets/tchaik', "tchaik28", "tchaik_final", ".mp4")
+editor(os.getcwd() + '/assets/tchaik', "tchaik9999999", "tchaik_final", ".mp4")
+# editor(os.getcwd() + '/assets/me_singing copy', "cat73", "final", ".mp4")
 
+# currently tryna figure out how to get the horizontally crushed videos to uncrush themselves.
+# 1st if statement in perfect_h
+# 1st if statement in loop above
+# I know that vstack allows diff sizes
